@@ -1,149 +1,185 @@
 openapi: 3.0.0
 info:
-  title: Health tracker Statement
+  title: QuantifiedSelf App Statement
   description: >
-    <h3> Course Table Schema </h3> 
+    <h3> Login Table Schema </h3> 
     <table>
       <thead>
-        <th>Column Name</th>
-        <th>Column Type</th>
-        <th>Constraints</th>
+        <tr>
+          <th>Column Name</th>
+          <th>Column Type</th>
+          <th>Constraints</th>
+        </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>course_id</td>
-        <td>Integer</td>
-        <td>Primary Key, Auto Increment</td>
-      </tr>
-      <tr>
-        <td>course_name</td>
-        <td>String</td>
-        <td>Not Null</td>
-      </tr>
-      <tr>
-        <td>course_code</td>
-        <td>String</td>
-        <td>Unique, Not Null</td>
-      </tr>      
-      <tr>
-        <td>course_description</td>
-        <td>String</td>
-        <td></td>
-      </tr>         
-    </tbody>
+        <tr>
+          <td>user_id</td>
+          <td>Integer</td>
+          <td>Primary Key, Auto Increment</td>
+        </tr>
+        <tr>
+          <td>username</td>
+          <td>String</td>
+          <td>Unique, Not Null</td>
+        </tr>
+        <tr>
+          <td>password</td>
+          <td>String</td>
+          <td>Not Null</td>
+        </tr>
+      </tbody>
     </table>
 
-    <h3> Student Table Schema </h3> 
+    <h3> Tracker Table Schema </h3> 
     <table>
       <thead>
-        <th>Column Name</th>
-        <th>Column Type</th>
-        <th>Constraints</th>
+        <tr>
+          <th>Column Name</th>
+          <th>Column Type</th>
+          <th>Constraints</th>
+        </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>student_id</td>
-        <td>Integer</td>
-        <td>Primary Key, Auto Increment</td>
-      </tr>
-      <tr>
-        <td>roll_number</td>
-        <td>String</td>
-        <td>Unique, Not Null</td>
-      </tr>
-      <tr>
-        <td>first_name</td>
-        <td>String</td>
-        <td>Not Null</td>
-      </tr>      
-      <tr>
-        <td>last_name</td>
-        <td>String</td>
-        <td></td>
-      </tr>         
-    </tbody>
+        <tr>
+          <td>tracker_id</td>
+          <td>Integer</td>
+          <td>Primary Key, Auto Increment</td>
+        </tr>
+        <tr>
+          <td>user_id</td>
+          <td>Integer</td>
+          <td>Foreign Key(user.user_id)</td>
+        </tr>
+        <tr>
+          <td>tracker_name</td>
+          <td>String</td>
+          <td>Unique, Not Null</td>
+        </tr>
+        <tr>
+          <td>description</td>
+          <td>String</td>
+          <td>Not Null</td>
+        </tr>
+        <tr>
+          <td>t_type</td>
+          <td>String</td>
+          <td>Not Null</td>
+        </tr>         
+      </tbody>
     </table>
 
-
-    <h3> Enrollment Table Schema </h3> 
+    <h3> Log Table Schema </h3>
     <table>
       <thead>
-        <th>Column Name</th>
-        <th>Column Type</th>
-        <th>Constraints</th>
+        <tr>
+          <th>Column Name</th>
+          <th>Column Type</th>
+          <th>Constraints</th>
+        </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>enrollment_id</td>
-        <td>Integer</td>
-        <td>Primary Key, Auto Increment</td>
-      </tr>
-      <tr>
-        <td>student_id</td>
-        <td>Integer</td>
-        <td>Foreign Key (student.student_id), Not Null</td>
-      </tr>
-      <tr>
-        <td>course_id</td>
-        <td>Integer</td>
-        <td>Foreign Key (course.course_id), Not Null</td>
-    </tbody>
+        <tr>
+          <td>tracker_id</td>
+          <td>Integer</td>
+          <td>Primary Key, Foreign Key (tracker.tracker_id)</td>
+        </tr>
+        <tr>
+          <td>options</td>
+          <td>String</td>
+          <td>Not Null</td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3> Setting Table Schema </h3> 
+    <table>
+      <thead>
+        <tr>
+          <th>Column Name</th>
+          <th>Column Type</th>
+          <th>Constraints</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>logger_id</td>
+          <td>Integer</td>
+          <td>Primary Key, Auto Increment</td>
+        </tr>
+        <tr>
+          <td>tracker_id</td>
+          <td>Integer</td>
+          <td>Foreign Key (tracker.tracker_id)</td>
+        </tr>
+        <tr>
+          <td>t_value</td>
+          <td>Integer</td>
+          <td>Not Null</td>
+        </tr>
+        <tr>
+          <td>comments</td>
+          <td>String</td>
+          <td></td>
+        </tr>
+      </tbody>
     </table>
 
     <h3> Error Codes </h3> 
     <table>
       <thead>
-        <th>Resource</th>
-        <th>Error Code</th>
-        <th>Message</th>
+        <tr>
+          <th>Resource</th>
+          <th>Error Code</th>
+          <th>Message</th>
+        </tr>
       </thead>
       <tbody>
-      <tr>
-        <td>Course</td>
-        <td>COURSE001</td>
-        <td>Course Name is required and should be string.</td>
-      </tr>
-      <tr>
-        <td>Course</td>
-        <td>COURSE002</td>
-        <td>Course Code is required and should be string.</td>
-      </tr>
-      <tr>
-        <td>Course</td>
-        <td>COURSE003</td>
-        <td> Course Description should be string.</td>
-      </tr>
-      <tr>
-        <td>Student</td>
-        <td>STUDENT001</td>
-        <td>Roll Number required and should be String </td>
-      </tr>
-      <tr>
-        <td>Student</td>
-        <td>STUDENT002</td>
-        <td>First Name is required and should be String </td>
-      </tr>
-      <tr>
-        <td>Student</td>
-        <td>STUDENT003</td>
-        <td>Last Name is String </td>
-      </tr>
-      <tr>
-        <td>Enrollment</td>
-        <td>ENROLLMENT001</td>
-        <td>Course does not exist</td>
-      </tr>
-      <tr>
-        <td>Enrollment</td>
-        <td>ENROLLMENT002</td>
-        <td>Student does not exist.</td>
-      </tr>  
-      <tr>
-        <td>Enrollment</td>
-        <td>ENROLLMENT003</td>
-        <td>Course Code is required and should be string.</td>
-      </tr> 
-    </tbody>
+        <tr>
+          <td>Login</td>
+          <td>USER001</td>
+          <td>Username is required and should be string.</td>
+        </tr>
+        <tr>
+          <td>Login</td>
+          <td>USER002</td>
+          <td>Password is required and should be string.</td>
+        </tr>
+        <tr>
+          <td>Tracker</td>
+          <td>TRACKER001</td>
+          <td>Tracker name is required and should be string.</td>
+        </tr>
+        <tr>
+          <td>Tracker</td>
+          <td>TRACKER002</td>
+          <td>Tracker description is required and should be string.</td>
+        </tr>
+        <tr>
+          <td>Tracker</td>
+          <td>TRACKER003</td>
+          <td>Tracker type is required.</td>
+        </tr>
+        <tr>
+          <td>Log</td>
+          <td>LOGGER001</td>
+          <td>Tracker value is required and should be integer.</td>
+        </tr>
+        <tr>
+          <td>Log</td>
+          <td>LOGGER002</td>
+          <td>Timestamp must be in the format 'YYYY-MM-DD hh:mm'.</td>
+        </tr>
+        <tr>
+          <td>Log</td>
+          <td>LOGGER003</td>
+          <td>Comments must be string.</td>
+        </tr>
+        <tr>
+          <td>Setting</td>
+          <td>SETTING001</td>
+          <td>Setting is required and should be string and have comma-separeted values.</td>
+        </tr>
+      </tbody>
     </table>
 
   version: 1.0.0
@@ -162,7 +198,7 @@ paths:
             type: integer
             example: 201
       responses:
-        '200':
+        "200":
           description: Request Successful
           content:
             application/json:
@@ -182,9 +218,9 @@ paths:
                   course_description:
                     type: string
                     example: Course Description Example
-        '500':
+        "500":
           description: Internal Server Error
-        '404':
+        "404":
           description: Course not found
 
     put:
@@ -212,7 +248,7 @@ paths:
                   type: string
                   example: Course Description Example
       responses:
-        '200':
+        "200":
           description: Successfuly updated
           content:
             application/json:
@@ -231,11 +267,11 @@ paths:
                   course_description:
                     type: string
                     example: Course Description Example
-        '404':
+        "404":
           description: Course not found
-        '500':
+        "500":
           description: Internal Server Error
-        '400':
+        "400":
           description: Bad request
           content:
             application/json:
@@ -256,11 +292,11 @@ paths:
             type: integer
             example: 201
       responses:
-        '200':
+        "200":
           description: Successfully Deleted
-        '404':
+        "404":
           description: Course not found
-        '500':
+        "500":
           description: Intenal Server Error
 
   /api/course:
@@ -283,7 +319,7 @@ paths:
                   type: string
                   example: Course Description Example
       responses:
-        '201':
+        "201":
           description: Successfully Created
           content:
             application/json:
@@ -302,11 +338,11 @@ paths:
                   course_description:
                     type: string
                     example: Course Description Example
-        '409':
+        "409":
           description: course_code already exist
-        '500':
+        "500":
           description: Internal Server Error
-        '400':
+        "400":
           description: Bad request
           content:
             application/json:
@@ -329,7 +365,7 @@ paths:
             type: integer
             example: 201
       responses:
-        '200':
+        "200":
           description: Request Successful
           content:
             application/json:
@@ -349,9 +385,9 @@ paths:
                   roll_number:
                     type: string
                     example: MA19M010
-        '500':
+        "500":
           description: Internal server error
-        '404':
+        "404":
           description: Student not found
 
     put:
@@ -379,7 +415,7 @@ paths:
                   type: string
                   example: MA19M010
       responses:
-        '200':
+        "200":
           description: Successfully updated
           content:
             application/json:
@@ -398,11 +434,11 @@ paths:
                   roll_number:
                     type: string
                     example: MA19M010
-        '404':
+        "404":
           description: Student not found
-        '500':
+        "500":
           description: Internal Server Error
-        '400':
+        "400":
           description: Bad request
           content:
             application/json:
@@ -423,11 +459,11 @@ paths:
             type: integer
             example: 101
       responses:
-        '200':
+        "200":
           description: Successfully Deleted
-        '500':
+        "500":
           description: Internal Server Error
-        '404':
+        "404":
           description: Student not found
 
   /api/student:
@@ -450,7 +486,7 @@ paths:
                   type: string
                   example: MA19M010
       responses:
-        '201':
+        "201":
           description: Successfully Created
           content:
             application/json:
@@ -470,11 +506,11 @@ paths:
                   roll_number:
                     type: string
                     example: MA19M010
-        '409':
+        "409":
           description: Student already exist
-        '500':
+        "500":
           description: Internal Server Error
-        '400':
+        "400":
           description: Bad request
           content:
             application/json:
@@ -498,7 +534,7 @@ paths:
             type: integer
             example: 101
       responses:
-        '200':
+        "200":
           description: Request Successful
           content:
             application/json:
@@ -515,7 +551,7 @@ paths:
                     course_id:
                       type: integer
                       example: 201
-        '400':
+        "400":
           description: Invalid Student Id
           content:
             application/json:
@@ -526,9 +562,9 @@ paths:
                     type: string
                   error_message:
                     type: string
-        '404':
+        "404":
           description: Student is not enrolled in any course
-        '500':
+        "500":
           description: Internal Server Error
 
     post:
@@ -550,7 +586,7 @@ paths:
                   type: integer
                   example: 12345
       responses:
-        '201':
+        "201":
           description: Enrollment successful
           content:
             application/json:
@@ -567,11 +603,11 @@ paths:
                     course_id:
                       type: integer
                       example: 201
-        '404':
+        "404":
           description: Student not found
-        '500':
+        "500":
           description: Internal Server Error
-        '400':
+        "400":
           description: Bad request
           content:
             application/json:
@@ -601,9 +637,9 @@ paths:
             type: integer
             example: 10
       responses:
-        '200':
+        "200":
           description: Successfully deleted
-        '400':
+        "400":
           description: Invalid Student Id or Course Id.
           content:
             application/json:
@@ -614,7 +650,7 @@ paths:
                     type: string
                   error_message:
                     type: string
-        '404':
+        "404":
           description: Enrollment for the student not found
-        '500':
+        "500":
           description: Internal Server Error
