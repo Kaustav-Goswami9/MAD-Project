@@ -186,67 +186,58 @@ info:
 servers:
   - url: http://127.0.0.1:5000/
 paths:
-  /api/course/{course_id}:
-    description: End point to read, update and delete a course resource with course_id = courseId.
+  /api/user/{username}:
+    description: End point to read, update and delete a User resource with uname = username.
     get:
-      description: Operation to Read course resource.
+      description: Operation to Read User resource.
       parameters:
         - in: path
-          name: course_id
+          name: username
           required: true
           schema:
-            type: integer
-            example: 201
+            type: string
+            example: "user1"
       responses:
         "200":
           description: Request Successful
           content:
             application/json:
               schema:
-                title: course object
+                title: user object
                 type: object
                 properties:
-                  course_id:
+                  user_id:
                     type: integer
-                    example: 201
-                  course_name:
+                    example: 1
+                  username:
                     type: string
-                    example: Maths1
-                  course_code:
+                    example: user1
+                  password:
                     type: string
-                    example: MA101
-                  course_description:
-                    type: string
-                    example: Course Description Example
+                    example: "password"
         "500":
           description: Internal Server Error
         "404":
-          description: Course not found
+          description: user not found
 
     put:
-      description: Operation to update the course resource.
+      description: Operation to update the User resource.
       parameters:
         - in: path
-          name: course_id
+          name: username
           required: true
           schema:
-            type: integer
-            example: 201
+            type: string
+            example: "user1"
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                course_name:
+                password:
                   type: string
-                  example: Maths1
-                course_code:
-                  type: string
-                  example: MA101
-                course_description:
-                  type: string
-                  example: Course Description Example
+                  example: "password123"
       responses:
         "200":
           description: Successfuly updated
@@ -255,20 +246,17 @@ paths:
               schema:
                 type: object
                 properties:
-                  course_id:
+                  user_id:
                     type: integer
-                    example: 201
-                  course_name:
+                    example: 1
+                  username:
                     type: string
-                    example: Maths1
-                  course_code:
+                    example: user1
+                  password:
                     type: string
-                    example: MA101
-                  course_description:
-                    type: string
-                    example: Course Description Example
+                    example: "password123"
         "404":
-          description: Course not found
+          description: user not found
         "500":
           description: Internal Server Error
         "400":
@@ -282,42 +270,40 @@ paths:
                     type: string
                   error_message:
                     type: string
+
     delete:
-      description: Operation to delete the course resource
+      description: Operation to delete the User resource
       parameters:
         - in: path
-          name: course_id
+          name: username
           required: true
           schema:
-            type: integer
-            example: 201
+            type: string
+            example: "user1"
       responses:
         "200":
           description: Successfully Deleted
         "404":
-          description: Course not found
+          description: user not found
         "500":
           description: Intenal Server Error
 
-  /api/course:
-    description: End point to create course resource
+  /api/user:
+    description: End point to create User resource
     post:
-      description: Operation to create the course resource
+      description: Operation to create the User resource
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                course_name:
+                username:
                   type: string
-                  example: Maths1
-                course_code:
+                  example: "user2"
+                password:
                   type: string
-                  example: MA101
-                course_description:
-                  type: string
-                  example: Course Description Example
+                  example: "abcd"
       responses:
         "201":
           description: Successfully Created
@@ -326,20 +312,17 @@ paths:
               schema:
                 type: object
                 properties:
-                  course_id:
+                  user_id:
                     type: integer
-                    example: 201
-                  course_name:
+                    example: 2
+                  username:
                     type: string
-                    example: Maths1
-                  course_code:
+                    example: user2
+                  password:
                     type: string
-                    example: MA101
-                  course_description:
-                    type: string
-                    example: Course Description Example
+                    example: "abcd"
         "409":
-          description: course_code already exist
+          description: username already exist
         "500":
           description: Internal Server Error
         "400":
@@ -353,52 +336,128 @@ paths:
                     type: string
                   error_message:
                     type: string
-  /api/student/{student_id}:
-    description: Url to read, update and delete the student resource.
+
+  /api/tracker/{user_id}:
+    description: Url to create and read the Tracker resource.
     get:
-      description: Operation to read student resource
+      description: Operation to read tracker resource
       parameters:
         - in: path
-          name: student_id
+          name: user_id
           required: true
           schema:
             type: integer
-            example: 201
+            example: 1
       responses:
         "200":
           description: Request Successful
           content:
             application/json:
               schema:
-                title: student object
-                type: object
-                properties:
-                  student_id:
-                    type: integer
-                    example: 101
-                  first_name:
-                    type: string
-                    example: Narendra
-                  last_name:
-                    type: string
-                    example: Mishra
-                  roll_number:
-                    type: string
-                    example: MA19M010
+                type: array
+                example:
+                  [
+                    {
+                      "tracker_id": 1,
+                      "user_id": 1,
+                      "tracker_name": "Temperature",
+                      "description": "Records my current temperature",
+                      "t_type": numerical,
+                    },
+                    {
+                      "tracker_id": 2,
+                      "user_id": 1,
+                      "tracker_name": "Mood",
+                      "description": "Records my current mood",
+                      "t_type": mcq,
+                    },
+                  ]
+        "404":
+          description: Tracker not found
         "500":
           description: Internal server error
-        "404":
-          description: Student not found
 
-    put:
-      description: Operation to update the student resource
+    post:
+      description: Operation to create tracker resource
       parameters:
         - in: path
-          name: student_id
+          name: uid
           required: true
           schema:
             type: integer
-            example: 101
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tracker_name:
+                  type: string
+                  example: "Mood"
+                description:
+                  type: string
+                  example: "Records my current temperature"
+                t_type:
+                  type: string
+                  example: "mcq"
+      responses:
+        "201":
+          description: Successfully Created
+          content:
+            application/json:
+              schema:
+                title: student object
+                type: object
+                properties:
+                  tracker_id:
+                    type: integer
+                    example: 1
+                  user_id:
+                    type: integer
+                    example: 1
+                  tracker_name:
+                    type: string
+                    example: "Mood"
+                  description:
+                    type: string
+                    example: "Records my current temperature"
+                  t_type:
+                    type: string
+                    example: "mcq"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "409":
+          description: Tracker name already exist
+        "500":
+          description: Internal Server Error
+
+  /api/tracker/{tracker_id}/{user_id}:
+    description: Url to update and delete the tracker resource.
+    put:
+      description: Operation to update and delete the tracker resource
+      parameters:
+        - in: path
+          name: tracker_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+            example: 1
       requestBody:
         content:
           application/json:
@@ -450,7 +509,7 @@ paths:
                   error_message:
                     type: string
     delete:
-      description: Operation to delete the course resource
+      description: Operation to delete the user resource
       parameters:
         - in: path
           name: student_id
@@ -466,63 +525,7 @@ paths:
         "404":
           description: Student not found
 
-  /api/student:
-    description: Url to create student resource
-    post:
-      description: Operation to create the student resource
-      requestBody:
-        content:
-          application/json:
-            schema:
-              type: object
-              properties:
-                first_name:
-                  type: string
-                  example: Narendra
-                last_name:
-                  type: string
-                  example: Mishra
-                roll_number:
-                  type: string
-                  example: MA19M010
-      responses:
-        "201":
-          description: Successfully Created
-          content:
-            application/json:
-              schema:
-                title: student object
-                type: object
-                properties:
-                  student_id:
-                    type: integer
-                    example: 101
-                  first_name:
-                    type: string
-                    example: Narendra
-                  last_name:
-                    type: string
-                    example: Mishra
-                  roll_number:
-                    type: string
-                    example: MA19M010
-        "409":
-          description: Student already exist
-        "500":
-          description: Internal Server Error
-        "400":
-          description: Bad request
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  error_message:
-                    type: string
-
-  /api/student/{student_id}/course:
+  /api/student/{student_id}/user:
     description: Url to get the the list of enrollments a student with student_id is enrolled in.
     get:
       description: URL to get the list of enrollments, the student is enrolled in. This path belongs to the Enrollment table.
@@ -548,7 +551,7 @@ paths:
                     student_id:
                       type: integer
                       example: 101
-                    course_id:
+                    user_id:
                       type: integer
                       example: 201
         "400":
@@ -563,12 +566,12 @@ paths:
                   error_message:
                     type: string
         "404":
-          description: Student is not enrolled in any course
+          description: Student is not enrolled in any user
         "500":
           description: Internal Server Error
 
     post:
-      description: Add student enrollment aka enroll the student to the course. This path belongs to the Enrollment table.
+      description: Add student enrollment aka enroll the student to the user. This path belongs to the Enrollment table.
       parameters:
         - in: path
           name: student_id
@@ -582,7 +585,7 @@ paths:
             schema:
               type: object
               properties:
-                course_id:
+                user_id:
                   type: integer
                   example: 12345
       responses:
@@ -600,7 +603,7 @@ paths:
                     student_id:
                       type: integer
                       example: 101
-                    course_id:
+                    user_id:
                       type: integer
                       example: 201
         "404":
@@ -619,10 +622,10 @@ paths:
                   error_message:
                     type: string
 
-  /api/student/{student_id}/course/{course_id}:
-    description: URL to delete enrollment of a student in a course. This path belongs to the Enrollment table.
+  /api/student/{student_id}/user/{user_id}:
+    description: URL to delete enrollment of a student in a user. This path belongs to the Enrollment table.
     delete:
-      description: URL to delete enrollment of the student in the course. This path belongs to the Enrollment table.
+      description: URL to delete enrollment of the student in the user. This path belongs to the Enrollment table.
       parameters:
         - in: path
           name: student_id
@@ -631,7 +634,7 @@ paths:
             type: integer
             example: 101
         - in: path
-          name: course_id
+          name: user_id
           required: true
           schema:
             type: integer
@@ -640,7 +643,7 @@ paths:
         "200":
           description: Successfully deleted
         "400":
-          description: Invalid Student Id or Course Id.
+          description: Invalid Student Id or user Id.
           content:
             application/json:
               schema:
