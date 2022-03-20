@@ -68,8 +68,10 @@ def new_user():
         # insert new user into DB
         form = {"username": request.form["username"],
                 "password": request.form["password"]}
-        rq.post(url=request.url_root+'api/user', json=form)
-        return redirect('/')
+        if rq.post(url=request.url_root+'api/user', json=form).status_code == 201:
+            return redirect('/')
+        else:
+            return render_template('error.html', error_msg="Username already exists")
 
 
 @app.route('/dashboard')
@@ -195,10 +197,14 @@ def new_log(tid):
     if request.method == 'GET':
         tdl = rq.get(url=request.url_root+'api/tracker/' +
                      str(current_user.user_id)).json()
+        td = None
         for i in tdl:
             if i.get('tracker_id') == tid:
                 td = i
                 break
+        if td == None:
+            return render_template('error.html', error_msg='Tracker not found')
+
         if td.get('t_type') == 'mcq':
             set_d = rq.get(url=request.url_root + 'api/setting/' +
                            str(tid)).json().get('options').split(',')
@@ -222,12 +228,15 @@ def edit_log(tid, lid):
     if request.method == 'GET':
         log_l = rq.get(url=request.url_root+'api/log/'+str(tid))
         if log_l.status_code != 200:
-            return render_template('error.html', error_msg="Invalid tracker/log id")
+            return render_template('error.html', error_msg="Invalid tracker id")
 
+        data = None
         log_l = log_l.json()
         for log in log_l:
             if log.get('logger_id') == lid:
                 data = log
+        if data == None:
+            return render_template('error.html', error_msg='Invalid log id')
 
         set_d = rq.get(url=request.url_root + 'api/setting/' + str(tid))
         tdl = rq.get(url=request.url_root+'api/tracker/' +

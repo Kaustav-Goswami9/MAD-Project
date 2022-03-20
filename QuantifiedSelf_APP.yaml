@@ -79,29 +79,6 @@ info:
       </thead>
       <tbody>
         <tr>
-          <td>tracker_id</td>
-          <td>Integer</td>
-          <td>Primary Key, Foreign Key (tracker.tracker_id)</td>
-        </tr>
-        <tr>
-          <td>options</td>
-          <td>String</td>
-          <td>Not Null</td>
-        </tr>
-      </tbody>
-    </table>
-
-    <h3> Setting Table Schema </h3> 
-    <table>
-      <thead>
-        <tr>
-          <th>Column Name</th>
-          <th>Column Type</th>
-          <th>Constraints</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr>
           <td>logger_id</td>
           <td>Integer</td>
           <td>Primary Key, Auto Increment</td>
@@ -117,9 +94,37 @@ info:
           <td>Not Null</td>
         </tr>
         <tr>
+          <td>timestamp</td>
+          <td>String</td>
+          <td>Default (CURRENT_TIMESTAMP)</td>
+        </tr>
+        <tr>
           <td>comments</td>
           <td>String</td>
           <td></td>
+        </tr>
+      </tbody>
+    </table>
+
+    <h3> Setting Table Schema </h3> 
+    <table>
+      <thead>
+        <tr>
+          <th>Column Name</th>
+          <th>Column Type</th>
+          <th>Constraints</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>tracker_id</td>
+          <td>Integer</td>
+          <td>Primary Key, Foreign Key (tracker.tracker_id)</td>
+        </tr>
+        <tr>
+          <td>options</td>
+          <td>String</td>
+          <td>Not Null</td>
         </tr>
       </tbody>
     </table>
@@ -215,10 +220,10 @@ paths:
                   password:
                     type: string
                     example: "password"
-        "500":
-          description: Internal Server Error
         "404":
           description: user not found
+        "500":
+          description: Internal Server Error
 
     put:
       description: Operation to update the User resource.
@@ -255,10 +260,6 @@ paths:
                   password:
                     type: string
                     example: "password123"
-        "404":
-          description: user not found
-        "500":
-          description: Internal Server Error
         "400":
           description: Bad request
           content:
@@ -270,6 +271,10 @@ paths:
                     type: string
                   error_message:
                     type: string
+        "404":
+          description: user not found
+        "500":
+          description: Internal Server Error
 
     delete:
       description: Operation to delete the User resource
@@ -321,10 +326,6 @@ paths:
                   password:
                     type: string
                     example: "abcd"
-        "409":
-          description: username already exist
-        "500":
-          description: Internal Server Error
         "400":
           description: Bad request
           content:
@@ -336,6 +337,10 @@ paths:
                     type: string
                   error_message:
                     type: string
+        "409":
+          description: username already exist
+        "500":
+          description: Internal Server Error
 
   /api/tracker/{user_id}:
     description: Url to create and read the Tracker resource.
@@ -373,7 +378,7 @@ paths:
                     },
                   ]
         "404":
-          description: Tracker not found
+          description: User not found
         "500":
           description: Internal server error
 
@@ -381,7 +386,7 @@ paths:
       description: Operation to create tracker resource
       parameters:
         - in: path
-          name: uid
+          name: user_id
           required: true
           schema:
             type: integer
@@ -394,13 +399,13 @@ paths:
               properties:
                 tracker_name:
                   type: string
-                  example: "Mood"
+                  example: "Running"
                 description:
                   type: string
-                  example: "Records my current temperature"
+                  example: "Records my running distance in KM"
                 t_type:
                   type: string
-                  example: "mcq"
+                  example: "numerical"
       responses:
         "201":
           description: Successfully Created
@@ -418,13 +423,13 @@ paths:
                     example: 1
                   tracker_name:
                     type: string
-                    example: "Mood"
+                    example: "Running"
                   description:
                     type: string
-                    example: "Records my current temperature"
+                    example: "Records my running distance in KM"
                   t_type:
                     type: string
-                    example: "mcq"
+                    example: "numerical"
         "400":
           description: Bad request
           content:
@@ -444,7 +449,7 @@ paths:
   /api/tracker/{tracker_id}/{user_id}:
     description: Url to update and delete the tracker resource.
     put:
-      description: Operation to update and delete the tracker resource
+      description: Operation to update the tracker resource
       parameters:
         - in: path
           name: tracker_id
@@ -464,15 +469,12 @@ paths:
             schema:
               type: object
               properties:
-                first_name:
+                tracker_name:
                   type: string
-                  example: Narendra
-                last_name:
+                  example: "running"
+                description:
                   type: string
-                  example: Mishra
-                roll_number:
-                  type: string
-                  example: MA19M010
+                  example: "Records running distance in meters"
       responses:
         "200":
           description: Successfully updated
@@ -481,22 +483,21 @@ paths:
               schema:
                 type: object
                 properties:
-                  student_id:
+                  tracker_id:
                     type: integer
-                    example: 101
-                  first_name:
+                    example: 1
+                  user_id:
+                    type: integer
+                    example: 1
+                  tracker_name:
                     type: string
-                    example: Narendra
-                  last_name:
+                    example: "running"
+                  description:
                     type: string
-                    example: Mishra
-                  roll_number:
+                    example: "Records my running distance in meters"
+                  t_type:
                     type: string
-                    example: MA19M010
-        "404":
-          description: Student not found
-        "500":
-          description: Internal Server Error
+                    example: "numerical"
         "400":
           description: Bad request
           content:
@@ -508,22 +509,231 @@ paths:
                     type: string
                   error_message:
                     type: string
+        "404":
+          description: Tracker data not found
+        "500":
+          description: Internal Server Error
+
     delete:
-      description: Operation to delete the user resource
+      description: Operation to delete the tracker resource
       parameters:
         - in: path
-          name: student_id
+          name: tracker_id
           required: true
           schema:
             type: integer
-            example: 101
+            example: 1
+        - in: path
+          name: user_id
+          required: true
+          schema:
+            type: integer
+            example: 1
       responses:
         "200":
           description: Successfully Deleted
+        "404":
+          description: Tracker data not found
         "500":
           description: Internal Server Error
+
+  /api/log/{tracker_id}:
+    description: Url to create and read the Log resource.
+    get:
+      description: Operation to read Log resource
+      parameters:
+        - in: path
+          name: tracker_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Request Successful
+          content:
+            application/json:
+              schema:
+                type: array
+                example:
+                  [
+                    {
+                      "logger_id": 1,
+                      "tracker_id": 1,
+                      "t_value": 97,
+                      "comments": "Feeling a bit feverish",
+                      "timestamp": "2022-03-22 19:50:10",
+                    },
+                    {
+                      "logger_id": 2,
+                      "tracker_id": 1,
+                      "t_value": 90,
+                      "comments",
+                      "timestamp": "2022-03-22 19:50:10",
+                    },
+                  ]
         "404":
-          description: Student not found
+          description: Tracker not found
+        "500":
+          description: Internal server error
+
+    post:
+      description: Operation to create Log resource
+      parameters:
+        - in: path
+          name: tracker_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                tracker_id:
+                  type: integer
+                  example: 1
+                t_value:
+                  type: integer
+                  example: 96
+                comments:
+                  type: string
+                  example: "Feeling good now"
+                timestamp:
+                  type: string
+                  example: "2022-03-23 19:50:10"
+      responses:
+        "201":
+          description: Successfully Created
+          content:
+            application/json:
+              schema:
+                title: student object
+                type: object
+                properties:
+                  logger_id:
+                    type: integer
+                    example: 3
+                  tracker_id:
+                    type: integer
+                    example: 1
+                  t_value:
+                    type: integer
+                    example: 96
+                  comments:
+                    type: string
+                    example: "Feeling good now"
+                  timestamp:
+                    type: string
+                    example: "2022-03-23 19:50:10"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "404":
+          description: Tracker not found
+        "500":
+          description: Internal Server Error
+
+  /api/log/{tracker_id}/{log_id}:
+    description: Url to update and delete the Log resource.
+    put:
+      description: Operation to update the Log resource
+      parameters:
+        - in: path
+          name: tracker_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - in: path
+          name: log_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                t_value:
+                  type: integer
+                  example: 98
+                comments:
+                  type: string
+                  example: "Having fever"
+      responses:
+        "200":
+          description: Successfully updated
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  logger_id:
+                    type: integer
+                    example: 1
+                  tracker_id:
+                    type: integer
+                    example: 1
+                  t_value:
+                    type: integer
+                    example: 98
+                  comments:
+                    type: string
+                    example: "Having fever"
+                  timestamp:
+                    type: string
+                    example: "2022-03-22 19:50:10"
+        "400":
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  error_code:
+                    type: string
+                  error_message:
+                    type: string
+        "404":
+          description: Tracker not found
+        "500":
+          description: Internal Server Error
+
+    delete:
+      description: Operation to delete the Log resource
+      parameters:
+        - in: path
+          name: tracker_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+        - in: path
+          name: log_id
+          required: true
+          schema:
+            type: integer
+            example: 1
+      responses:
+        "200":
+          description: Successfully Deleted
+        "404":
+          description: Tracker/Log id not found
+        "500":
+          description: Internal Server Error
 
   /api/student/{student_id}/user:
     description: Url to get the the list of enrollments a student with student_id is enrolled in.
