@@ -144,6 +144,8 @@ def new_tracker():
 
         td = rq.post(url=request.url_root+'api/tracker/'+str(current_user.user_id),
                      json=data)
+        if td.status_code != 201:
+            return render_template('error.html', error_msg="Tracker name already exists")
         if data['t_type'] == 'mcq':
             rq.post(url=request.url_root+'api/setting/'+str(td.json().get('tracker_id')),
                     json={'options': request.form.get('settings')})
