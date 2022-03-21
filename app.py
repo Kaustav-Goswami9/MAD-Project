@@ -102,7 +102,7 @@ def tracker_details(tid):
         plt.xticks(rotation=45)
         plt.tight_layout(pad=6)
 
-        if td.get('t_type') == 'mcq':
+        if td.get('t_type') == 'multiple-choice':
             set_d = rq.get(url=request.url_root + 'api/setting/' +
                            str(tid)).json().get('options').split(',')
 
@@ -135,7 +135,7 @@ def new_tracker():
     if request.method == 'GET':
         return render_template('new_tracker.html', error=0)
     else:
-        if request.form.get('type') == 'mcq':
+        if request.form.get('type') == 'multiple-choice':
             if len(request.form.get('settings')) == 0:
                 return render_template('new_tracker.html', error=1)
 
@@ -146,7 +146,8 @@ def new_tracker():
                      json=data)
         if td.status_code != 201:
             return render_template('error.html', error_msg="Tracker name already exists")
-        if data['t_type'] == 'mcq':
+
+        if data['t_type'] == 'multiple-choice':
             rq.post(url=request.url_root+'api/setting/'+str(td.json().get('tracker_id')),
                     json={'options': request.form.get('settings')})
         return redirect('/dashboard')
@@ -167,7 +168,7 @@ def edit_tracker(tid):
             return render_template('error.html', error_msg='Tracker not found')
 
         set_d = ''
-        if td.get('t_type') == 'mcq':
+        if td.get('t_type') == 'multiple-choice':
             set_d = rq.get(url=request.url_root + 'api/setting/' +
                            str(tid)).json().get('options')
         return render_template('edit_tracker.html', t=td, options=set_d)
@@ -207,7 +208,7 @@ def new_log(tid):
         if td == None:
             return render_template('error.html', error_msg='Tracker not found')
 
-        if td.get('t_type') == 'mcq':
+        if td.get('t_type') == 'multiple-choice':
             set_d = rq.get(url=request.url_root + 'api/setting/' +
                            str(tid)).json().get('options').split(',')
             return render_template('new_log.html', t=td, options=set_d)

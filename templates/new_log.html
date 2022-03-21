@@ -18,7 +18,7 @@
             <input type="datetime-local" name="timestamp" id="time" class="form-control" placeholder="Time-stamp">
             <label for="time">Time-stamp</label>
         </div>
-        {% if t.t_type == 'mcq' %}
+        {% if t.t_type == 'multiple-choice' %}
         <label>Select an option:</label>
         {% for i in options %}
         <div class="form-check pb-4 form-check-inline">

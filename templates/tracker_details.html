@@ -40,7 +40,7 @@
                 <tr>
                     <td>{{loop.index}}</td>
                     <td>{{l.timestamp}}</td>
-                    {% if t.t_type == 'mcq' %}
+                    {% if t.t_type == 'multiple-choice' %}
                     <td>{{options[l.t_value-1]}}</td>
                     {% else %}
                     <td>{{l.t_value}}</td>

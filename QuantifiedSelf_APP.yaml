@@ -374,7 +374,7 @@ paths:
                       "user_id": 1,
                       "tracker_name": "Mood",
                       "description": "Records my current mood",
-                      "t_type": mcq,
+                      "t_type": "multiple-choice",
                     },
                   ]
         "404":
