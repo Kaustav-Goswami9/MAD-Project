@@ -96,7 +96,7 @@ def tracker_details(tid):
         return render_template('error.html', error_msg='Tracker not found')
     log = rq.get(url=request.url_root+'api/log/' + str(td.get('tracker_id')))
 
-    if log.status_code == 200:
+    if log.status_code == 200 and len(log.json()) > 0:
 
         plt.xlabel('Timestamp')
         plt.xticks(rotation=45)

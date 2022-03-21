@@ -182,7 +182,7 @@ info:
         <tr>
           <td>Setting</td>
           <td>SETTING001</td>
-          <td>Setting is required and should be string and have comma-separeted values.</td>
+          <td>Options are required and should be string and have comma-separeted values.</td>
         </tr>
       </tbody>
     </table>
@@ -562,14 +562,14 @@ paths:
                       "tracker_id": 1,
                       "t_value": 97,
                       "comments": "Feeling a bit feverish",
-                      "timestamp": "2022-03-22 19:50:10",
+                      "timestamp": "2022-03-22 19:50",
                     },
                     {
                       "logger_id": 2,
                       "tracker_id": 1,
                       "t_value": 90,
                       "comments",
-                      "timestamp": "2022-03-22 19:50:10",
+                      "timestamp": "2022-03-22 19:50",
                     },
                   ]
         "404":
@@ -592,9 +592,6 @@ paths:
             schema:
               type: object
               properties:
-                tracker_id:
-                  type: integer
-                  example: 1
                 t_value:
                   type: integer
                   example: 96
@@ -603,7 +600,7 @@ paths:
                   example: "Feeling good now"
                 timestamp:
                   type: string
-                  example: "2022-03-23 19:50:10"
+                  example: "2022-03-23 19:50"
       responses:
         "201":
           description: Successfully Created
@@ -673,6 +670,9 @@ paths:
                 comments:
                   type: string
                   example: "Having fever"
+                timestamp:
+                  type: string
+                  example: "2022-03-23 19:05"
       responses:
         "200":
           description: Successfully updated
@@ -735,17 +735,17 @@ paths:
         "500":
           description: Internal Server Error
 
-  /api/student/{student_id}/user:
-    description: Url to get the the list of enrollments a student with student_id is enrolled in.
+  /api/setting/{tracker_id}:
+    description: Url to create, read and delete the Settings option given by the user for a Multi-choice tracker.
     get:
-      description: URL to get the list of enrollments, the student is enrolled in. This path belongs to the Enrollment table.
+      description: Url to get the Settings option given by the user for a Multi-choice tracker.
       parameters:
         - in: path
-          name: student_id
+          name: tracker_id
           required: true
           schema:
             type: integer
-            example: 101
+            example: 2
       responses:
         "200":
           description: Request Successful
@@ -755,71 +755,50 @@ paths:
                 type: array
                 items:
                   properties:
-                    enrollment_id:
+                    tracker_id:
                       type: integer
-                      example: 10
-                    student_id:
-                      type: integer
-                      example: 101
-                    user_id:
-                      type: integer
-                      example: 201
-        "400":
-          description: Invalid Student Id
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  error_message:
-                    type: string
+                      example: 2
+                    options:
+                      type: string
+                      example: "sad, calm, happy"
         "404":
-          description: Student is not enrolled in any user
+          description: No data found for that tracker id.
         "500":
           description: Internal Server Error
 
     post:
-      description: Add student enrollment aka enroll the student to the user. This path belongs to the Enrollment table.
+      description: Url to create the Settings option given by the user for a Multi-choice tracker.
       parameters:
         - in: path
-          name: student_id
+          name: tracker_id
           required: true
           schema:
             type: integer
-            example: 101
+            example: 4
       requestBody:
         content:
           application/json:
             schema:
               type: object
               properties:
-                user_id:
-                  type: integer
-                  example: 12345
+                options:
+                  type: string
+                  example: "energetic, excited, fatigue, exhausted"
       responses:
         "201":
-          description: Enrollment successful
+          description: Settings recorded successful
           content:
             application/json:
               schema:
-                type: array
+                type: object
                 items:
                   properties:
-                    enrollment_id:
+                    tracker_id:
                       type: integer
-                      example: 10
-                    student_id:
-                      type: integer
-                      example: 101
-                    user_id:
-                      type: integer
-                      example: 201
-        "404":
-          description: Student not found
-        "500":
-          description: Internal Server Error
+                      example: 4
+                    options:
+                      type: string
+                      example: "energetic, excited, fatigue, exhausted"
         "400":
           description: Bad request
           content:
@@ -831,39 +810,26 @@ paths:
                     type: string
                   error_message:
                     type: string
+        "404":
+          description: Tracker id not found
+        "409":
+          description: Tracker id already exists
+        "500":
+          description: Internal Server Error
 
-  /api/student/{student_id}/user/{user_id}:
-    description: URL to delete enrollment of a student in a user. This path belongs to the Enrollment table.
     delete:
-      description: URL to delete enrollment of the student in the user. This path belongs to the Enrollment table.
+      description: Url to delete the Settings option given by the user for a Multi-choice tracker.
       parameters:
         - in: path
-          name: student_id
+          name: tracker_id
           required: true
           schema:
             type: integer
-            example: 101
-        - in: path
-          name: user_id
-          required: true
-          schema:
-            type: integer
-            example: 10
+            example: 4
       responses:
         "200":
           description: Successfully deleted
-        "400":
-          description: Invalid Student Id or user Id.
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  error_code:
-                    type: string
-                  error_message:
-                    type: string
         "404":
-          description: Enrollment for the student not found
+          description: Tracker id not found
         "500":
           description: Internal Server Error

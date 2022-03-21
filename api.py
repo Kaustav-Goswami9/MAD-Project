@@ -75,10 +75,10 @@ class Tracker_api(Resource):
 
     @marshal_with(output)
     def get(self, uid):
-        t_obj = Tracker.query.filter_by(user_id=uid).all()
-
-        if t_obj is None:
+        if User.query.filter_by(user_id=uid).first() is None:
             raise DataError(status_code=404)
+
+        t_obj = Tracker.query.filter_by(user_id=uid).all()
 
         return t_obj, 200
 
@@ -94,10 +94,10 @@ class Tracker_api(Resource):
         t_obj.description = data.get("description")
 
         if t_obj.tracker_name is None or type(t_obj.tracker_name) != str:
-            raise LogicError(status_code=400, error_code="TRACKER002",
+            raise LogicError(status_code=400, error_code="TRACKER001",
                              error_msg="Tracker name is required and should be string.")
         if t_obj.description is None or type(t_obj.description) != str:
-            raise LogicError(status_code=400, error_code="TRACKER003",
+            raise LogicError(status_code=400, error_code="TRACKER002",
                              error_msg="Tracker description is required and should be string.")
 
         db.session.commit()
@@ -161,7 +161,7 @@ class Log_api(Resource):
     def get(self, tid):
         l_obj = Log.query.filter_by(tracker_id=tid).all()
 
-        if len(l_obj) == 0:
+        if Tracker.query.filter_by(tracker_id=tid).first() is None:
             raise DataError(status_code=404)
 
         return l_obj, 200
@@ -182,7 +182,7 @@ class Log_api(Resource):
 
         if data.get('timestamp') is not None and self.check(data.get('timestamp')):
             l_obj.timestamp = data.get('timestamp')
-        else:
+        elif data.get('timestamp') is not None:
             raise LogicError(status_code=400, error_code="LOGGER002",
                              error_msg="Timestamp must be in the format 'YYYY-MM-DD hh:mm:ss'")
 
@@ -266,6 +266,10 @@ class Setting_api(Resource):
 
         data = request.get_json()
         s_obj = Setting(tracker_id=tid, options=data.get('options'))
+
+        if s_obj.options is None:
+            raise LogicError(status_code=400, error_code="SETTING001",
+                             error_msg="Options are required and should be string and have comma-separeted values.")
 
         db.session.add(s_obj)
         db.session.commit()
